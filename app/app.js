@@ -54,10 +54,6 @@ function setCount(trophy, value) {
   saveProgress();
 }
 
-function sourceById(id) {
-  return desk.data.sources.find((s) => s.id === id);
-}
-
 function isSpoilerHidden(trophy) {
   return desk.spoiler && trophy.kind === 'story' && !isEarned(trophy.id);
 }
@@ -158,8 +154,9 @@ function renderAuditStrip() {
   document.getElementById('audit-detail').textContent =
     'Audit: ' + desk.data.trophies.length + ' of 55 trophies carry a full guide (' +
     steps + ' steps, ' + citations + ' source citations). Guides are original to this entry; ' +
-    'names and descriptions are the official list, as published by PlayStation (S1) and mirrored ' +
-    'by Exophase (S2) and PSNProfiles (S3) on 2026-11-18.';
+    'names and descriptions are the official list, as published by PlayStation and mirrored ' +
+    'by Exophase and PSNProfiles on 2026-11-18. Every citation under a guide is written out ' +
+    'in full — source, what it supports, and its date — so it can be checked on its own.';
 }
 
 /* ---------------- guide panel (centre column) ---------------- */
@@ -190,7 +187,7 @@ function renderGuide() {
   nameEl.textContent = displayName(trophy);
   nameEl.className = hiddenSpoiler ? 'spoiler-blur' : '';
   const officialEl = document.getElementById('guide-official');
-  officialEl.textContent = '“' + trophy.description + '” — official description (S1)';
+  officialEl.textContent = '“' + trophy.description + '” — official description (PlayStation Network trophy service)';
   officialEl.className = hiddenSpoiler ? 'spoiler-blur' : '';
 
   document.getElementById('guide-where').textContent = trophy.where;
@@ -218,9 +215,14 @@ function renderGuide() {
     counter.hidden = true;
   }
 
-  document.getElementById('guide-sources').textContent = trophy.sources
-    .map((id) => { const s = sourceById(id); return id + ' ' + (s ? s.name : ''); })
-    .join(' · ');
+  const sourcesEl = document.getElementById('guide-sources');
+  sourcesEl.textContent = '';
+  for (const citation of trophy.sources) {
+    const line = document.createElement('span');
+    line.className = 'citation';
+    line.textContent = citation;
+    sourcesEl.append(line);
+  }
 
   const earnBtn = document.getElementById('guide-earn-toggle');
   earnBtn.textContent = isEarned(trophy.id) ? 'Earned ✓ (click to undo)' : 'Mark as earned';
@@ -268,6 +270,12 @@ function renderSources() {
     name.className = 'source-name';
     name.textContent = source.id + ' · ' + source.name;
     li.append(name, document.createTextNode(' — ' + source.detail + ' (' + source.date + ')'));
+    if (source.url) {
+      const url = document.createElement('span');
+      url.className = 'source-url';
+      url.textContent = source.url;
+      li.append(document.createElement('br'), url);
+    }
     list.append(li);
   }
 }
