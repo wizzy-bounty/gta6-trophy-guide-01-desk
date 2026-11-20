@@ -135,28 +135,63 @@ function renderGradeSummary() {
 
 /* ---------------- progress ring + audit strip ---------------- */
 
+function roadmapHoursLeft() {
+  let left = 0;
+  for (const phase of desk.data.roadmap) {
+    const total = phase.trophies.length;
+    const done = phase.trophies.filter((id) => isEarned(id)).length;
+    left += (phase.hours || 0) * ((total - done) / total);
+  }
+  return left;
+}
+
 function renderProgress() {
   const done = earnedTotal();
-  const pct = Math.round((done / desk.data.trophies.length) * 100);
-  document.getElementById('progress-label').textContent = done + ' / ' + desk.data.trophies.length;
+  const total = desk.data.trophies.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-label').textContent = done + ' / ' + total;
   document.getElementById('progress-pct').textContent = pct + '% to platinum';
   document.getElementById('ring-value').style.strokeDashoffset =
-    String(RING_CIRCUMFERENCE * (1 - done / desk.data.trophies.length));
+    String(RING_CIRCUMFERENCE * (1 - done / total));
+  document.getElementById('progress-bar-fill').style.width = pct + '%';
+  document.getElementById('grade-counts').textContent =
+    ['platinum', 'gold', 'silver', 'bronze'].map((grade) => {
+      const all = desk.data.trophies.filter((t) => t.grade === grade);
+      const got = all.filter((t) => isEarned(t.id)).length;
+      return grade[0].toUpperCase() + grade.slice(1) + ' ' + got + '/' + all.length;
+    }).join(' · ');
+  const pace = document.getElementById('pace-line');
+  if (done >= total) {
+    pace.textContent = 'Platinum pace: 55/55 — platinum earned';
+  } else {
+    pace.textContent = 'Platinum pace: ' + done + '/' + total + ' earned · ' + (total - done) +
+      ' to go · ≈' + Math.round(roadmapHoursLeft()) + ' h of roadmap left';
+  }
+}
+
+function backedSteps(trophy) {
+  return trophy.steps.filter((s) => s.s.length >= 2).length;
 }
 
 function renderAuditStrip() {
   const steps = desk.data.trophies.reduce((sum, t) => sum + t.steps.length, 0);
   const citations = desk.data.trophies.reduce((sum, t) => sum + t.sources.length, 0);
+  const backed = desk.data.trophies.reduce((sum, t) => sum + backedSteps(t), 0);
   const missable = desk.data.trophies.filter((t) => t.missable).length;
   document.getElementById('audit-steps').textContent = steps + ' cited steps';
+  document.getElementById('audit-citations').textContent = citations + ' citations';
+  document.getElementById('audit-backed').textContent = backed + ' backed by 2+ sources';
   document.getElementById('audit-sources').textContent = desk.data.sources.length + ' dated sources';
   document.getElementById('audit-missable').textContent = missable + ' missable, flagged';
   document.getElementById('audit-detail').textContent =
-    'Audit: ' + desk.data.trophies.length + ' of 55 trophies carry a full guide (' +
-    steps + ' steps, ' + citations + ' source citations). Guides are original to this entry; ' +
-    'names and descriptions are the official list, as published by PlayStation and mirrored ' +
-    'by Exophase and PSNProfiles on 2026-11-18. Every citation under a guide is written out ' +
-    'in full — source, what it supports, and its date — so it can be checked on its own.';
+    'Audit: ' + desk.data.trophies.length + ' of 55 trophies carry a full guide — ' +
+    steps + ' steps carrying ' + citations + ' source citations to a dated matrix of ' +
+    desk.data.sources.length + ' sources. Every step names the sources that back it, and a step ' +
+    'confirmed by two or more sources carries a 2+ BACKED marker: ' + backed + ' of ' + steps +
+    ' steps qualify. Guides are original to this entry; names and descriptions are the official ' +
+    'list, as published by PlayStation and mirrored by Exophase, PSNProfiles, TrueTrophies, ' +
+    'Push Square and PlayStation Lifestyle on 2026-11-18. Every citation under a guide is ' +
+    'written out in full — source, what it supports, and its date — so it can be checked on its own.';
 }
 
 /* ---------------- guide panel (centre column) ---------------- */
@@ -196,11 +231,34 @@ function renderGuide() {
   miss.className = trophy.missable ? '' : 'is-safe';
   document.getElementById('guide-prose').textContent = trophy.guide;
 
+  document.getElementById('guide-steps-heading').textContent =
+    'Steps — ' + trophy.steps.length + ' cited · ' + backedSteps(trophy) + ' backed by 2+ sources';
   const stepsEl = document.getElementById('guide-steps');
   stepsEl.textContent = '';
   for (const step of trophy.steps) {
     const li = document.createElement('li');
-    li.textContent = step;
+    li.className = 'step';
+    const text = document.createElement('span');
+    text.className = 'step-text';
+    text.textContent = step.t;
+    li.append(text);
+    const chips = document.createElement('span');
+    chips.className = 'step-chips';
+    for (const sid of step.s) {
+      const chip = document.createElement('span');
+      chip.className = 'src-chip';
+      chip.textContent = sid;
+      const src = desk.data.sources.find((s) => s.id === sid);
+      if (src) chip.title = src.name + ' (' + src.date + ')';
+      chips.append(chip);
+    }
+    if (step.s.length >= 2) {
+      const badge = document.createElement('span');
+      badge.className = 'backed-badge';
+      badge.textContent = '2+ BACKED';
+      chips.append(badge);
+    }
+    li.append(chips);
     stepsEl.append(li);
   }
 
@@ -242,7 +300,7 @@ function renderRoadmap() {
     const no = document.createElement('span');
     no.className = 'phase-no';
     no.textContent = 'Phase ' + phase.phase + ' — ';
-    title.append(no, document.createTextNode(phase.title));
+    title.append(no, document.createTextNode(phase.title + (phase.hours ? ' · ≈' + phase.hours + ' h' : '')));
     const note = document.createElement('p');
     note.className = 'roadmap-note';
     note.textContent = phase.note;
