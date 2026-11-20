@@ -17,6 +17,19 @@ and every step confirmed by two or more sources carries a **2+ BACKED** marker �
 all 275 qualify. The header publishes the counts plainly: **275 cited steps,
 267 citations, 275 backed by 2+ sources, 12 dated sources**.
 
+## How backing works
+
+Every step in every guide lists the sources that back it as chips (S1, S2, …),
+keyed to the dated source matrix in the app. A step marked **2+ BACKED** is
+confirmed by two or more of those sources: the backing is anchored on the
+official PlayStation trophy list and cross-checked against at least one
+independent mirror or guide (Exophase, PSNProfiles, TrueTrophies, Push Square,
+PowerPyx and the others in the matrix). The counts in the app's header — cited
+steps, citations, backed steps, dated sources — are computed from the data
+each time the desk loads, not typed in, so what the header claims is exactly
+what the data holds. The same note runs under the audit strip in the app
+itself, where a skeptical reader can check it against the chips on any step.
+
 ## What is inside
 
 - **55 of 55 official trophies guided** — every PlayStation 5 trophy (1 platinum,

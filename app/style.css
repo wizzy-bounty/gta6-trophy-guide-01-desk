@@ -37,6 +37,7 @@ body { display: flex; flex-direction: column; height: 100vh; }
 
 #desk-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 18px;
   padding: 8px 14px;
@@ -76,6 +77,15 @@ body { display: flex; flex-direction: column; height: 100vh; }
   font-size: 12px;
   white-space: nowrap;
 }
+
+#method-note {
+  flex: 1 1 100%;
+  margin: -8px 0 0;
+  color: var(--ink-dim);
+  font-size: 11.5px;
+}
+
+#method-note strong { color: var(--ink); }
 
 #progress-block { display: flex; align-items: center; gap: 10px; }
 
