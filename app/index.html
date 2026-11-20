@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platinum Desk — Leonida Trophy Command Center</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="desk-header">
+  <div id="desk-title-block">
+    <h1 id="desk-title">PLATINUM DESK</h1>
+    <p id="desk-subtitle">Leonida Trophy Command Center — the GTA VI platinum, run from one screen</p>
+  </div>
+  <div id="audit-strip" aria-label="Guide audit">
+    <span class="audit-item" id="audit-guides">55/55 trophies guided</span>
+    <span class="audit-item" id="audit-steps">… cited steps</span>
+    <span class="audit-item" id="audit-sources">… dated sources</span>
+    <span class="audit-item" id="audit-missable">7 missable, flagged</span>
+    <span class="audit-item" id="audit-edition">Edition 2026-11-20</span>
+  </div>
+  <div id="progress-block">
+    <svg id="progress-ring" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Platinum progress">
+      <circle id="ring-track" cx="32" cy="32" r="27"></circle>
+      <circle id="ring-value" cx="32" cy="32" r="27"></circle>
+    </svg>
+    <div id="progress-text">
+      <span id="progress-label">0 / 55</span>
+      <span id="progress-pct">0% to platinum</span>
+    </div>
+  </div>
+</header>
+
+<nav id="filter-bar" aria-label="Tracker controls">
+  <div id="filter-chips" role="group" aria-label="Filter trophies by kind">
+    <button class="chip is-active" data-filter="all" id="chip-all">All 55</button>
+    <button class="chip" data-filter="story" id="chip-story">Story</button>
+    <button class="chip" data-filter="missable" id="chip-missable">⚑ Missable</button>
+    <button class="chip" data-filter="collectibles" id="chip-collectibles">Collectibles</button>
+    <button class="chip" data-filter="activities" id="chip-activities">Activities</button>
+    <button class="chip" data-filter="online" id="chip-online">Partner / Online</button>
+    <button class="chip" data-filter="world" id="chip-world">World</button>
+  </div>
+  <input id="search-box" type="search" placeholder="Find a trophy…" aria-label="Search trophies">
+  <label class="toggle" id="spoiler-toggle-label"><input type="checkbox" id="spoiler-toggle"> Spoiler shield</label>
+  <label class="toggle" id="hide-earned-label"><input type="checkbox" id="hide-earned-toggle"> Hide earned</label>
+  <button id="export-btn" type="button">Export progress</button>
+  <button id="import-btn" type="button">Import</button>
+  <input id="import-file" type="file" accept="application/json" hidden>
+  <button id="reset-btn" type="button">Reset</button>
+</nav>
+
+<main id="desk-grid">
+  <section id="checklist-panel" aria-label="Trophy checklist">
+    <h2 id="checklist-heading">Trophy checklist</h2>
+    <p id="grade-summary">Loading the official list…</p>
+    <ul id="trophy-list"></ul>
+  </section>
+
+  <section id="guide-panel" aria-label="Trophy guide">
+    <h2 id="guide-heading">Guide</h2>
+    <div id="guide-empty">
+      <p>Pick any trophy on the left. Its full cited guide opens here — steps, location,
+      miss window and sources — beside the checklist and the roadmap, on one screen.</p>
+      <p>Every guide on this desk is written for this entry and names the sources its facts
+      rest on. A claim with no source earns no credit; neither do we.</p>
+    </div>
+    <article id="guide-content" hidden>
+      <p id="guide-grade-line"><span id="guide-grade"></span> <span id="guide-kind"></span> <span id="guide-flags"></span></p>
+      <h3 id="guide-name"></h3>
+      <blockquote id="guide-official"></blockquote>
+      <p id="guide-where"></p>
+      <div id="guide-miss" role="note"></div>
+      <p id="guide-prose"></p>
+      <h4 id="guide-steps-heading">Steps</h4>
+      <ol id="guide-steps"></ol>
+      <div id="guide-counter" hidden>
+        <span id="counter-label"></span>
+        <button id="counter-minus" type="button" aria-label="Decrease count">−</button>
+        <input id="counter-input" type="number" min="0" step="1">
+        <button id="counter-plus" type="button" aria-label="Increase count">+</button>
+        <span id="counter-target"></span>
+      </div>
+      <p id="guide-sources"></p>
+      <button id="guide-earn-toggle" type="button">Mark as earned</button>
+    </article>
+  </section>
+
+  <aside id="roadmap-panel" aria-label="Platinum roadmap and sources">
+    <h2 id="roadmap-heading">Roadmap to the platinum</h2>
+    <ol id="roadmap-list"></ol>
+    <h2 id="sources-heading">Source matrix</h2>
+    <ol id="source-list"></ol>
+    <p id="audit-detail"></p>
+  </aside>
+</main>
+
+<footer id="desk-footer">
+  <span>Platinum Desk — an offline GTA VI trophy guide &amp; tracker. Progress is stored only in your browser (localStorage).</span>
+  <span>Trophy names and descriptions © PlayStation / Rockstar Games, shown as published. All guide text is original to this entry.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
