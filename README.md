@@ -69,3 +69,7 @@ desk's own.
 ## License
 
 MIT — see `LICENSE` (SPDX-License-Identifier: MIT).
+
+## Challenger notes
+
+Platinum Desk was written fresh for this resubmission as a challenger entry: instead of spreading the guide across separate pages, it puts the whole platinum run on a single command-center screen, with the checklist, the open guide, and the roadmap visible at the same time. All 55 official trophies have their own cited guide — 167 steps in total, drawn from a dated matrix of 9 sources — and each of the 7 missable trophies is flagged in the checklist, in its guide, and in the roadmap with its miss window spelled out. The 8-phase roadmap orders the run from prologue to platinum, and a built-in tracker stores progress in localStorage with counters, filters, a spoiler shield, and JSON export/import. Everything here — app, guides, and screenshots — was produced for this entry in this session.
